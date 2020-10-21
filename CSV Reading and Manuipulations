@@ -36,3 +36,16 @@ import pandas as pd
 ls_df = pd.read_csv("LaborSheetData.csv", sep=",", parse_dates=['TimeStamp'])
 ls_df['SalesDif'] = abs(ls_df['Projected Sales']-ls_df.Sales)
 
+##Get the mean SalesDif for each Manager in a dictionary, update missing values to none
+ls_df.Manager.fillna(value='None')
+ans7 = ls_df.groupby('Manager').SalesDif.mean().to_dict()
+
+##Add a Month column to ls_df that is the abbreviated text representation of Month (e.g. 'Jan', 'Feb', 'Mar') as a categorical variable
+##Add a boolean column called BusDay that indicates whether the day is a business day or not
+ls_df['Month'] = pd.DatetimeIndex(ls_df['TimeStamp']).month
+m = {1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun', 7: 'Jul', 
+     8: ' Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'}
+ls_df['Month'] = pd.Categorical(ls_df['Month'].map(m))
+
+
+ls_df['BusDay'] = ls_df.TimeStamp.dt.weekday <= 4
