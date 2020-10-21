@@ -1,0 +1,38 @@
+import pandas as pd
+df_new = pd.read_csv("hw_diamonds.csv", sep="/")
+
+##create: element is a dictionary with the keys being carat, cut, color, clarity, depth, table, and price and the values being their corresponding values in df_new
+diamonds = []
+
+for idx, val in df_new.iterrows():
+    carat = val.carat
+    cut = val.cut
+    color = val.color
+    clarity = val.clarity
+    depth = val.depth
+    table = val.table
+    price = val.price
+    
+    diamond = {'carat': carat,
+           'cut': cut,
+           'color': color,
+           'clarity': clarity,
+           'depth': depth,
+           'table': table,
+           'price': price}
+    diamonds.append(diamond)
+
+import json
+with open("hw_diamonds.json", "w") as fw:
+    json.dump(diamonds, fw)
+
+##Deserialize the hw_diamonds.json file to a Python list
+with open("hw_diamonds.json", "r") as fr:
+    diamonds_new = json.load(fr)
+    
+##TimeStamp column is to be parsed as a date and the first row contains headers
+##New column called SalesDif to the dataframe using vectorization that is absolute value of the difference between Projected Sales and Sales
+import pandas as pd
+ls_df = pd.read_csv("LaborSheetData.csv", sep=",", parse_dates=['TimeStamp'])
+ls_df['SalesDif'] = abs(ls_df['Projected Sales']-ls_df.Sales)
+
