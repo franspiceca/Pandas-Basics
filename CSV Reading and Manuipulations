@@ -49,3 +49,15 @@ ls_df['Month'] = pd.Categorical(ls_df['Month'].map(m))
 
 
 ls_df['BusDay'] = ls_df.TimeStamp.dt.weekday <= 4
+
+##Using the pandas join method, join the two dataframes using the intersection of the date indices and store the result in a new dataframe called combined_df
+import pandas as pd
+wu_df = pd.read_csv("web-users.csv", sep=",", index_col=['DATE'], header=0, parse_dates=['DATE'])
+
+
+ls2_df = pd.read_csv("LaborSheetData.csv", sep=",", parse_dates=['TimeStamp'], index_col=['TimeStamp'], usecols=['TimeStamp', 'Sales', 'Manager', 'Store'])
+ls2_df = ls2_df[(ls2_df.Manager == 'David H') & (ls2_df.Store == 4007)]
+del ls2_df['Manager']
+del ls2_df['Store']
+
+combined_df = pd.concat((wu_df,ls2_df))
