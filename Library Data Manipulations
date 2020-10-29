@@ -22,3 +22,22 @@ df.OBEREG = df.OBEREG.cat.codes
 df = df.drop(df.index[[3,8,12,27]])
 
 df.head()
+
+##Simplifying dataframe to look at specific variables
+df = df[['POPU_ST', 'CENTLIB', 'BRANLIB', 'BKMOB', 'TOTSTAFF', 'TOTINCM']]
+df.head()
+
+##Add column to look at how many total libaries there are
+df['TOTAL_LIB'] = df['CENTLIB'] + df['BRANLIB'] + df['BKMOB']
+df.head()
+
+##Add colum to investigate population divided by total libraries (how many people each libary might service)
+df['POPU_BY_LIBS'] = (df['POPU_ST']/df['TOTAL_LIB'])
+df.head()
+
+##Column to explain if more central or more branch libaries
+df['MORE_BRANCHS'] = np.where(df.CENTLIB < df.BRANLIB, "MoreCentral", "MoreBranch")
+df.head()
+
+##Convert above column to categorical
+df['MORE_BRANCHS'] = pd.Categorical(np.where(df.CENTLIB < df.BRANLIB, "MoreCentral", "MoreBranch"))
