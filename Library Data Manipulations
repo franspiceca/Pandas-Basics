@@ -41,3 +41,37 @@ df.head()
 
 ##Convert above column to categorical
 df['MORE_BRANCHS'] = pd.Categorical(np.where(df.CENTLIB < df.BRANLIB, "MoreCentral", "MoreBranch"))
+
+##Ordering by least libaries to most libaries
+libsum = df.groupby('TOTAL_LIB').sum()
+libsum
+
+##Resetting to new dataset
+df2 = pd.read_csv("pls_fy18_state_pud18i.csv", parse_dates=['STARTDAT','ENDDATE'])
+
+##Creating dictionary to have index position for each column head
+col_mapping_dict = {c[0]:c[1] for c in enumerate(df2.columns)}
+col_mapping_dict
+
+##Cutting out unneeded columns from the data frame
+df2 = df2.iloc[:, np.r_[0,1,4,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,59,61,63,65,67,69,71,73,75,77,79,81,83,85,117,119,127,128]]
+
+##Removing entries with any null values (in this set, "-1" means value is missing)
+df2 = df2[df2['TOTSTAFF'] >= 0]
+
+#Changing to categorical for testing/ML
+df2.OBEREG = pd.Categorical(df2.OBEREG)
+df2.OBEREG = df2.OBEREG.cat.codes
+
+##Drop columns that are territories/not states: Guam, American Samoa, Northern Mariana Islands & D.C.
+df2 = df2.drop(df2.index[[3,8,12,27]])
+
+df2.head()
+
+##Splitting off State and Population of Service Area
+df3 = df2[['STABR', 'POPU_LSA']]
+df3.head()
+
+##Joining dataframes
+df3 = pd.concat([df,df2], sort=False, axis=1, join="inner")
+df3
